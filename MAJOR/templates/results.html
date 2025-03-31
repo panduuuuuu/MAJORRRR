@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Results</title>
+    <style>
+        body {
+            background: url('{{ url_for('static', filename='2.jpg') }}') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(30, 30, 30, 0.8);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+            max-width: 900px;
+            margin: auto;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .block-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            transition: transform 0.3s ease-in-out, background 0.3s;
+        }
+        .block-container:hover {
+            transform: scale(1.03);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .image-container img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        h1 {
+            color: #4db8ff;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #72d6ff;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        p {
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            h2 {
+                font-size: 1.6rem;
+            }
+            .image-container img {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prediction Results</h1>
+        <div class="block-container">
+            <p><strong>Name:</strong> {{ name }}</p>
+            <p><strong>Age:</strong> {{ age }}</p>
+        </div>
+        
+        <h2>Individual Model Predictions</h2>
+        <div class="block-container">
+            <p><strong>Random Forest Prediction:</strong> {{ results["Random Forest Prediction"] }}</p>
+            <p><strong>Naive Bayes Prediction:</strong> {{ results["Naive Bayes Prediction"] }}</p>
+            <p><strong>SVM Prediction:</strong> {{ results["SVM Prediction"] }}</p>
+        </div>
+        
+        <h2>Final Predicted Disease</h2>
+        <div class="block-container">
+            <p><strong>Final Prediction:</strong> {{ results["Final Prediction"] }}</p>
+            <p><strong>Treatment Recommendation:</strong> {{ results["Treatment"] }}</p>
+        </div>
+        
+        <h2>Model Accuracies</h2>
+        <div class="block-container">
+            <p><strong>SVM Accuracy:</strong> {{ svm_accuracy }}%</p>
+            <p><strong>Naive Bayes Accuracy:</strong> {{ bn_accuracy }}%</p>
+            <p><strong>Random Forest Accuracy:</strong> {{ rf_accuracy }}%</p>
+        </div>
+        <h2>Confusion Matrices</h2>
+<div class="image-container">
+    {% if svm_cm %}
+        <div class="block-container">
+            <h3>SVM Confusion Matrix</h3>
+            <img src="{{ url_for('static', filename=svm_cm) }}" alt="SVM Confusion Matrix">
+        </div>
+    {% endif %}
+    {% if bn_cm %}
+        <div class="block-container">
+            <h3>Naive Bayes Confusion Matrix</h3>
+            <img src="{{ url_for('static', filename=bn_cm) }}" alt="Naive Bayes Confusion Matrix">
+        </div>
+    {% endif %}
+    {% if rf_cm %}
+        <div class="block-container">
+            <h3>Random Forest Confusion Matrix</h3>
+            <img src="{{ url_for('static', filename=rf_cm) }}" alt="Random Forest Confusion Matrix">
+        </div>
+    {% endif %}
+</div>
+
+        
+    </div>
+    
+</body>
+</html>

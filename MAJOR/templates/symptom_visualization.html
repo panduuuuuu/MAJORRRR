@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Symptom Visualization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #d3d3d3;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .visualization-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .card-title {
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            background-color: #333;
+            color: white;
+        }
+        .card a {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Symptom Visualization</h1>
+        <div class="visualization-grid">
+            <div class="card">
+                <a href="/static/full_correlation_heatmap.png" target="_blank">
+                    <img src="/static/full_correlation_heatmap.png" alt="Correlation Heatmap">
+                    <div class="card-title">Correlation Heatmap</div>
+                </a>
+            </div>
+            <div class="card">
+                <a href="/static/full_stacked_bar_chart.png" target="_blank">
+                    <img src="/static/full_stacked_bar_chart.png" alt="Stacked Bar Chart">
+                    <div class="card-title">Stacked Bar Chart</div>
+                </a>
+            </div>
+            <div class="card">
+                <a href="/static/full_symptom_bar_chart.png" target="_blank">
+                    <img src="/static/full_symptom_bar_chart.png" alt="Symptom Bar Chart">
+                    <div class="card-title">Symptom Bar Chart</div>
+                </a>
+            </div>
+            <div class="card">
+                <a href="/static/full_symptom_heatmap.png" target="_blank">
+                    <img src="/static/full_symptom_heatmap.png" alt="Symptom Heatmap">
+                    <div class="card-title">Symptom Heatmap</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

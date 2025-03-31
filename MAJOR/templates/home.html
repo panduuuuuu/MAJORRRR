@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MedScope</title>
+  <style>
+    /* Welcome Section */
+.welcome-box {
+  width: 80%;
+  margin: 20px auto;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+}
+
+    /* General Styles */
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: rgba(0, 0, 0, 0.7);
+      background-image: url('https://diseasepredictionsite.netlify.app/img/background.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-blend-mode: darken;
+    }
+
+    header {
+      background: rgba(20, 40, 80, 0.9);
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+      margin: 20px auto;
+      width: 90%;
+      padding: 15px;
+    }
+
+    .horizontal-menu {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex-wrap: wrap;
+    }
+
+    .horizontal-menu li {
+      margin: 5px 12px;
+    }
+
+    .horizontal-menu a {
+      text-decoration: none;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 8px 20px;
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.2);
+      transition: transform 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+      backdrop-filter: blur(5px);
+      display: inline-block;
+    }
+
+    .horizontal-menu a:hover {
+      background: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+      transform: translateY(-4px);
+    }
+
+    /* Chatbot Styles */
+    .chatbot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #c471ed, #12c2e9);
+      border-radius: 50%;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      animation: bounce 2s infinite;
+    }
+
+    .chatbot-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      color: white;
+      font-size: 24px;
+    }
+
+    .chat-popup {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 320px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      padding: 15px;
+      z-index: 1000;
+    }
+
+    .chat-popup.active {
+      display: block;
+    }
+
+    .chat-output {
+      max-height: 220px;
+      overflow-y: auto;
+      margin: 10px 0;
+      padding: 5px;
+      background: #f1f1f1;
+      border-radius: 5px;
+    }
+
+    .chat-output p {
+      margin: 5px;
+      padding: 4px;
+      background: #e0e0e0;
+      border-radius: 5px;
+    }
+
+    .chat-output p:nth-child(odd) {
+      background: #d0f0c0;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <nav>
+    <ul class="horizontal-menu">
+      <li><a href="#">Home</a></li>
+      <li><a href="/index">Predict Disease</a></li>
+      <li><a href="{{ url_for('symptom_visualization') }}">Symptom Visualization</a></li>
+      <li><a href="/disease_severity">Disease Severity</a></li>
+   
+    </ul>
+  </nav>
+</header>
+<!-- Welcome Section -->
+<div class="welcome-box">
+  <h1>Welcome to MedScope</h1>
+  <p>Discover your potential health risks and stay ahead with our prediction tools.</p>
+</div>
+
+<!-- Chatbot Button -->
+<div class="chatbot" onclick="toggleChat()">
+  <div class="chatbot-icon">💬</div>
+</div>
+
+<!-- Chatbot Popup -->
+<div class="chat-popup" id="chatPopup">
+  <header>MedScope Chatbot</header>
+  <div id="chatOutput" class="chat-output"></div>
+  
+  <!-- Chatbot Buttons -->
+  <div class="chat-buttons">
+      <button onclick="sendMessage('medscope')">What is MedScope?</button>
+      <button onclick="sendMessage('how_to_use')">How to use MedScope?</button>
+      <button onclick="sendMessage('prediction')">Disease Prediction</button>
+      <button onclick="sendMessage('visualization')">Symptom Visualization</button>
+      <button onclick="sendMessage('severity')">Disease Severity</button>
+      <button onclick="sendMessage('risk')">Risk Assessment</button>
+      <button onclick="sendMessage('uses')">Uses of MedScope</button>
+      <button onclick="sendMessage('suggestions')">Health Suggestions</button>
+  </div>
+</div>
+
+<!-- Chatbot Script -->
+<script>
+  function toggleChat() {
+      var chatPopup = document.getElementById("chatPopup");
+      chatPopup.classList.toggle("active");
+  }
+
+ 
+  const responses = {
+    "medscope": "🩺 **MedScope** is an AI-powered medical assistant designed to help users analyze symptoms, assess risks, visualize health data, and make informed decisions about their health.",
+    
+    "how_to_use": "🔹 **1. Enter Symptoms** - Select or type symptoms from the list.\n🔹 **2. Predict Disease** - Our AI models analyze inputs and suggest the most likely disease.\n🔹 **3. Get Insights** - View severity levels, risk factors, treatment recommendations, and visual analysis.",
+
+    "prediction": "🤖 **Disease Prediction** is powered by advanced AI models:\n✔️ **Support Vector Machine (SVM)** - Analyzes symptoms using hyperplanes for classification.\n✔️ **Naive Bayes (NB)** - Uses probability-based classification for quick and reliable results.\n✔️ **Random Forest (RF)** - A collection of decision trees that enhance accuracy.\n\nThe final prediction is determined by analyzing the outputs from all three models and selecting the most frequently occurring result.\n\nAdditionally, the system provides the **accuracy scores** of each model, allowing users to assess the reliability of the prediction.",
+
+    "visualization": "📊 **Symptom & Disease Visualization** helps users understand the distribution of symptoms and how diseases are predicted using AI.\n\n✅ **Symptom Heatmaps** - Displays how different symptoms correlate with various diseases, making it easier to spot patterns.\n✅ **Graphical Symptom Map** - A visual representation of how frequently symptoms appear in different conditions.\n✅ **Interactive Body Diagram** - Shows affected body parts based on selected symptoms, enhancing understanding.\n✅ **Confusion Matrices** - These matrices illustrate the performance of each AI model (SVM, Random Forest, and Naive Bayes) by showing the number of correct and incorrect predictions.\n\nConfusion matrices help users see how well the models classify diseases, identify misclassified cases, and understand the effectiveness of each algorithm.",
+
+    "severity": "⚠️ **Disease Severity Assessment** helps users understand how critical their symptoms might be:\n🟢 **Mild** - Manageable symptoms that require minimal intervention.\n🟠 **Moderate** - Requires medical attention and further observation.\n🔴 **Severe** - Needs urgent medical care.\n\nSeverity is calculated based on the number and intensity of symptoms, along with factors like age and medical history.",
+
+    "risk": "🧬 **Risk Assessment** evaluates how likely a disease is based on:\n✔️ **Number of Symptoms** - More symptoms increase the probability.\n✔️ **Medical History** - Past conditions may contribute to the risk.\n✔️ **Lifestyle Factors** - Diet, exercise, and habits influence disease risk.\n\nThis feature provides insights into potential health concerns before symptoms worsen.",
+
+    "uses": "🌟 **Why Use MedScope?**\n✔️ Early Disease Detection\n✔️ Health Risk Analysis\n✔️ Visual Symptom Representation\n✔️ Personalized Treatment Recommendations\n✔️ AI-Powered Medical Insights",
+
+    "suggestions": "💡 **Health Tips for Better Well-being:**\n🥗 Maintain a balanced diet rich in nutrients.\n🚶 Exercise regularly to stay active and healthy.\n💧 Drink plenty of water for hydration.\n😴 Get sufficient rest to allow the body to recover.\n🩺 Seek medical advice for persistent or severe symptoms."
+};
+
+  function sendMessage(query) {
+      const output = document.getElementById("chatOutput");
+
+      // Display user selection
+      const userMessage = document.createElement("p");
+      userMessage.textContent = "You: " + query.replace("_", " ");
+      output.appendChild(userMessage);
+
+      // Display bot response
+      const botMessage = document.createElement("p");
+      botMessage.innerHTML = "Bot: " + (responses[query] || "I'm not sure about that.");
+      output.appendChild(botMessage);
+
+      output.scrollTop = output.scrollHeight;
+  }
+</script>
+
+</body>
+</html>

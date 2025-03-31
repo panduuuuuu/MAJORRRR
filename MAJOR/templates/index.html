@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Disease Prediction</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+        <style>
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .fade-in {
+                animation: fadeIn 1s ease-out;
+            }
+            body {
+                background: url('/static/1..png') center/cover no-repeat, linear-gradient(to right, #6a11cb, #2575fc);
+                color: white;
+                font-family: 'Poppins', sans-serif;
+            }
+            h1 {
+                font-family: 'Playfair Display', serif;
+                font-weight: 700;
+                font-size: 3.5rem;
+                color: inherit; /* Keeps the original color */
+                text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+                margin-bottom: 1.5rem;
+            }
+            .form-container {
+                background: rgba(255, 255, 255, 0.1);
+                padding: 2rem;
+                border-radius: 1.25rem;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+                backdrop-filter: blur(10px);
+                transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            }
+            .form-container:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
+            }
+            .block-container {
+                background: rgba(255, 255, 255, 0.2);
+                padding: 1.5rem;
+                border-radius: 1rem;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                margin-bottom: 1rem;
+                transition: transform 0.3s ease-in-out;
+            }
+            .block-container:hover {
+                transform: scale(1.05);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            }
+            select, input, button {
+                font-family: inherit;
+            }
+        </style>
+    </head>
+    
+    
+    
+<body class="min-h-screen flex items-center justify-center p-6">
+    <div class="max-w-3xl w-full">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-center text-white mb-8 fade-in">Disease Prediction System</h1>
+        <div class="form-container fade-in">
+            <form action="/predict" method="post" class="space-y-6">
+                <div class="block-container">
+                    <label class="block text-lg font-medium text-white">Name:</label>
+                    <input type="text" name="name" required 
+                        class="mt-2 block w-full p-3 border-none rounded-lg shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-4 focus:ring-pink-500">
+                </div>
+                <div class="block-container">
+                    <label class="block text-lg font-medium text-white">Age:</label>
+                    <input type="number" name="age" required 
+                        class="mt-2 block w-full p-3 border-none rounded-lg shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-4 focus:ring-green-500">
+                </div>
+                <div class="block-container">
+                    <label class="block text-lg font-medium text-white">Select Symptoms:</label>
+                    <select name="symptoms" multiple required 
+                        class="mt-2 block w-full p-3 border-none rounded-lg shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-4 focus:ring-blue-500">
+                        {% for symptom in symptoms %}
+                        <option value="{{ symptom }}">{{ symptom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" 
+                        class="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-blue-600 transition-all duration-300 shadow-lg focus:outline-none focus:ring-4 focus:ring-yellow-300">
+                        Predict
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

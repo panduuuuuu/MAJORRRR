@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Disease Severity and Health Chatbot</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #37474f;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .form-block {
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            padding: 25px;
+            margin: 15px;
+            border-radius: 12px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-block:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+        }
+        label {
+            font-weight: bold;
+            color: #37474f;
+        }
+        input, select, button {
+            margin: 5px 0;
+            font-size: 1.1rem;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            width: 100%;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        button {
+            background-color: #5c6bc0;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3949ab;
+            transform: translateY(-3px);
+        }
+        .chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #00796b;
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .chatbot:hover {
+            transform: scale(1.1);
+        }
+        .chat-popup {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            background-color: #f0f0f0;
+            border-radius: 12px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            z-index: 100;
+            animation: slideUp 0.3s ease;
+        }
+        .chat-popup.active {
+            display: block;
+        }
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            background-color: #00796b;
+            color: white;
+            border-radius: 10px 10px 0 0;
+        }
+        .chat-body {
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+        .chat-body p {
+            background-color: #e0f2f1;
+            margin: 5px;
+            padding: 8px;
+            border-radius: 8px;
+            color: #00796b;
+        }
+        .chat-input {
+            display: flex;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .chat-input button {
+            background-color: #00796b;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            margin-left: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .chat-input button:hover {
+            background-color: #004d40;
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Disease Severity Analysis</h1>
+        <div class="form-block">
+            <form action="/disease_severity" method="post">
+                <label for="age">Enter Age:</label>
+                <input type="number" id="age" name="age" placeholder="Enter your age" required>
+                <label for="symptoms">Select Symptoms:</label>
+                <select id="symptoms" name="symptoms" multiple>
+                    {% for symptom in symptoms %}
+                        <option value="{{ symptom }}">{{ symptom }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Analyze</button>
+            </form>
+        </div>
+        <div class="chatbot" onclick="toggleChat()">💬</div>
+        <div class="chat-popup" id="chatPopup">
+            <div class="chat-header">
+                <h4>Health Chatbot</h4>
+                <span onclick="toggleChat()">✖</span>
+            </div>
+            <div class="chat-body" id="chatBody">
+                <p>Hi! I am here to help you with health-related queries or to guide you through our website.</p>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function toggleChat() {
+            var chatPopup = document.getElementById("chatPopup");
+            chatPopup.classList.toggle("active");
+        }
+
+        function sendMessage() {
+            var userInput = document.getElementById("userInput").value;
+            if (userInput.trim() !== "") {
+                displayMessage("User", userInput);
+                respondToUser(userInput);
+                document.getElementById("userInput").value = "";
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+
+        function displayMessage(sender, message) {
+            var chatBody = document.getElementById("chatBody");
+            var messageElem = document.createElement("p");
+            messageElem.textContent = sender + ": " + message;
+            chatBody.appendChild(messageElem);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function respondToUser(message) {
+            let response = "I'm here to assist you with health-related questions or website guidance!";
+            if (message.toLowerCase().includes("help")) {
+                response = "I can assist you with health queries or navigating the website!";
+            }
+            displayMessage("Bot", response);
+        }
+    </script>
+</body>
+</html>
